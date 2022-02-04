@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 mongoose.connect('mongodb://localhost:27017/user');
 
+
 const userSchema=new mongoose.Schema({
     Firstname: {type: String },
     Lastname: {type: String },
@@ -29,8 +30,9 @@ app.get('/register',function(req,res){
 
 
 
-
+//post request from register page
 app.post('/register',function(req,res){
+    //checking if password field and confirm password fields are same
     if (req.body.password == req.body.password1){
         //checking if the email is already registered
         User.findOne({email:req.body.email},function(err,founduser){
@@ -80,6 +82,7 @@ app.post('/register',function(req,res){
     
 
 }else{
+    //if password fields not matched then show error
     res.send('password not matched')
     res.render('register')
 }
