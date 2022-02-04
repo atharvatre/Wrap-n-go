@@ -26,43 +26,10 @@ app.get('/register',function(req,res){
     res.render('register')
     
 })
-/*
-//passsword
-app.post('/register',function(req,res){
-    if (req.body.password == req.body.password1){
-        //email
-        if(User.findOne({email:"email"})) {
-            res.send('email already present')
-            res.render('register')
-        }
-        else if(User.findOne({phonenum:'phnum'})){
-                res.send('phone number already exists')
-                res.render('register')const newuser=new User({
-                Firstname:req.body.fname,
-                Lastname:req.body.lname,
-                adress:req.body.adress,
-                phonenum:req.body.phnum,
-                email:req.body.email,
-                password:req.body.password
-            })
-            }
-        else{
-            const newuser=new User({
-                Firstname:req.body.fname,
-                Lastname:req.body.lname,
-                adress:req.body.adress,
-                phonenum:req.body.phnum,
-                email:req.body.email,
-                password:req.body.password
-            })
-        }
-    }
 
-    else{
-        res.render('register')
-    }
 
-*/
+
+
 app.post('/register',function(req,res){
     if (req.body.password == req.body.password1){
         //checking if the email is already registered
