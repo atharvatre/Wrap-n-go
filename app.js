@@ -2,6 +2,8 @@ const express=require('express')
 const bodyParser=require('body-parser')
 const ejs=require('ejs')
 const mongoose=require('mongoose')
+const nodemailer = require('nodemailer');
+const { response } = require('express');
 
 
 const app= express()
@@ -26,14 +28,25 @@ const User=new mongoose.model("User",userSchema)
 
 
 
-//--------------------------------------------------Register page-------------------------------
+
 app.get('/register',function(req,res){
     res.render('register')
     
 })
 
+app.get('/login',function(req,res){
+    res.render('login')
+})
 
+app.get('/',function(req,res){
+    res.render('home')
+})
 
+app.get('/update_pwd',function(req,res){
+    res.render('update_pwd')
+})
+
+//--------------------------------------------------Register page-------------------------------
 //post request from register page
 app.post('/register',function(req,res){
     //checking if password field and confirm password fields are same
@@ -69,7 +82,7 @@ app.post('/register',function(req,res){
                                     if(err){
                                         console.log(err)
                                     }else{
-                                        res.render('login')
+                                        res.redirect('/login')
                                     }
                                 })
                             }
@@ -89,11 +102,7 @@ app.post('/register',function(req,res){
     //if password fields not matched then show error
     res.send('password not matched')
     res.render('register')
-}
-
-
-    
-    
+}  
 });
 
 //----------------------------------------------login page-------------------------------------
@@ -104,8 +113,8 @@ app.post('/login',function(req,res){
             res.send(err)
         }else{
             if(founduser){
-                if(founduser.password===req.body.password){
-                    res.render('home')
+                if(founduser.password==req.body.password){
+                    res.redirect('/')
                 }else{
                     res.send('Wrong Password')
                 }
@@ -114,9 +123,49 @@ app.post('/login',function(req,res){
             }
         }
     })
+    
 })
+
+
+//------------------------mailing for update password-------------------
+app.post('/update_pwd',function(req,res){
+    var a=Math.floor(Math.random() * 9999) + 1000;
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: "nikhita.garg2020@vitbhopal.ac.in",
+          pass: 'vit_Nik_10'
+        }
+      });
+      
+      message = {
+        from: "nikhita.garg2020@vitbhopal.ac.in",
+        to: req.body.email,
+        subject: 'OTP to update password',
+        text: a
+   }
+   transporter.sendMail(message, function(err, info) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log(info);
+        }
+    })
+    //------enter flash function???????????????????????????????
+    res.end('Mail sent')
+
+    if(a==req.body.otp){
+        res.redirect('/login')
+    }else{
+        res.send('wrong password')
+    }
+
+    
+
+});
 
 
 app.listen(3000,function(){
     console.log('server created')
 })
+
